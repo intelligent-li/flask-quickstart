@@ -18,24 +18,36 @@ and then setup your environment by running the following command and following t
 
 When asked for a domain, choose one that is appropriate for your application, I used `Intelligentli`. We now create our application, I'm using the creative name of `flaskexample` but you can use whatever suits you. We'll be using a DIY Openshift cartridge with the code from the Intelligent.li github flask-quickstart.
 
-    $ rhc create-app flaskexample diy --from-code https://github.com/intelligent-li/flask-quickstart.git
+    $ rhc create-app flaskexample python-2.7 --from-code https://github.com/intelligent-li/flask-quickstart.git
      
-    Using diy-0.1 (Do-It-Yourself 0.1) for 'diy'
-
     Application Options
     -------------------
     Namespace:   intelligentli
-    Cartridges:  diy-0.1
+    Cartridges:  python-2.7
     Source Code: https://github.com/intelligent-li/flask-quickstart.git
     Gear Size:   default
     Scaling:     no
-    
+
     Creating application 'flaskexample' ... done
+
+    Waiting for your DNS name to be available ... done
     
+    Cloning into 'flaskexample'...
+    Warning: Permanently added the RSA host key for IP address '54.234.174.227' to the list of known hosts.
 
-This step will clone the flask example repository locally into a directory with the name of your application, `flaskexample` in my case. Now point your browser to the URL `http://flaskexample-intelligentli.rhcloud.com/` (replacing the application and domain with the ones you have used) and see the front page of your new application up and running. 
+    Your application 'flaskexample' is now available.
 
-Now, there's one more thing we need to do, we need to give your application credentials to talk to Intelligent.li. To do this create a new key using the Intelligent.li management console, associate it with your scope, and download it locally. Copy the key into the root of your new repository as `client.pem` so that your application can connect to Intelligent.li. This key will determine which scope your Intelligent.li application has access to. 
+      URL:        http://flaskexample-intelligentli.rhcloud.com/
+      SSH to:     5259beb94382ecb1c8000060@flaskexample-intelligentli.rhcloud.com
+      Git remote: ssh://5259beb94382ecb1c8000060@flaskexample-intelligentli.rhcloud.com/~/git/flaskexample.git/
+      Cloned to:  /Users/manderson/Documents/pscion/bigd/comfort-o-meter/flaskexample
+
+    Run 'rhc show-app flaskexample' for more details about your app.
+
+
+This step will clone the repository locally into a directory with the name of your application, e.g. `flask example`. Now point your browser to the URL `http://flaskexample-intelligentli.rhcloud.com/` (replacing the application and domain with the ones you have used) and see the front page of your new application up and running. 
+
+There's one more thing we need to do, we need to give your application credentials to talk to Intelligent.li. To do this create a new key using the Intelligent.li management console, associate it with your scope, and download it locally. Copy the key into the root of your new repository as `client.pem` so that your application can connect to Intelligent.li. This key will determine which scope your Intelligent.li application has access to. 
 
      $ cd flaskexample
      $ cp ~/Downdloads/20c4c5e7-0331-4f40-8558-56debd9b33e7.pem ./client.pem

@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <title>Intelligent.li Flask Quickstart</title>
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=Edge">
+        <!--    <link rel="stylesheet" href="{{ url_for('static', filename='jquery.qtip2.min.css') }}"> -->
+        <link rel="shortcut icon" href="{{ url_for('static', filename='favicon.ico') }}">
+
+        <style>
+            @import url({{ url_for('static', filename='style.css') }});
+        </style>
+        <script src="{{ url_for('static', filename='jquery-1.8.2.min.js') }}"></script>
+        <script src="{{ url_for('static', filename='intelligent.li.v1.js') }}"></script>
+        <script src="{{ url_for('static', filename='app.js') }}"></script>
+     </head>
+    <title>Python Flask Application Quickstart</title>
+    <body>
+        <div id="content-wrapper" class="container">
+            <div id="header-image" class="row">
+                <div id="logo" class="span2"><img src="./static/ili.png" alt="Intelligent.li" ></div>
+            </div>
+            <div id="body">
+                <h1>Python Flask Application Quickstart</h1>
+                <p>Well done! Your fresh new Python Flask application is up and running. You're now ready to build your own realtime, time series, visualisations using the power of Intelligent.li</p>
+                <h2>So what's next?</h2>
+                <div class="numberwrapper">
+                    <div class="bignumber">1</div>
+                    <div class="numberedblock"><strong>Connect up a sensor and post some data: </strong>Follow the instructions in our <a href="http://intelligent.li/documentation/38/hello-world/"> Hello World Tutorial</a> to get your sensors up and running.</div>
+                </div>
+                <div class="numberwrapper">
+                    <div class="bignumber">2</div>
+                    <div class="numberedblock"><strong>Get a list your feeds: </strong>All the feeds in your scope can be found <a href="/api/v1/feeds">here</a></div>
+                </div>
+                <div class="numberwrapper">
+                    <div class="bignumber">3</div>
+                    <div class="numberedblock"><strong>Present the data in realtime:</strong> Enter a feed GUID and see the data as it arrives from your sensor. 
+                        <input type="text" id="guid" value="">
+                        <input type="submit" id="subscribe" value="Subscribe">
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </body>
+</html>
+

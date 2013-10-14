@@ -1,10 +1,18 @@
 /*
- * FeedSocket Copyright Percepscion Pty. Ltd.
+ * Inteligent.li.v2.js Copyright Percepscion Pty. Ltd.
  *
  * Provides a class for connecting to the Intelligent.li service  via
  * web sockets.
  *
  */
+
+function ili_timeNow(interval) {
+    var v = Math.floor(Date.now() / (1000 * interval)) * interval;
+    if (isNaN(v)) {
+        v = Math.floor(Date.now() / (1000 * 5)) * 5;
+    }
+    return v;
+}
 
 function ili_Observer() {
     this.feeds = {}
@@ -18,11 +26,38 @@ function ili_Observer() {
     this.respondNoData = function() {}
 }
 
+function ili_loadJSON(url, map, notify) {
+    $.getJSON(url, function(data, result) {
+        if (result == "success") {
+            for (var property in data) {
+                if (data.hasOwnProperty(property)) {
+                    map[property] = data[property];
+                }
+            }
+        }
+        notify();
+    });
+}
+
 function ili_Feed(guid, seconds) {
     this.observerCount = 0;
-    this.id = guid
+    this.id = guid;
     this.start = ((new Date() / 1000) | 0) - seconds; 
-    this.values = {}
+    this.values = {};
+    this.attributes = {};
+    this.tags = {};
+    
+    this.loadAttributes = function(notify)
+    {
+        this.attributes = {}
+        ili_loadJSON("/api/v1/feeds/" + this.id, this.attributes, notify);
+    }
+    
+    this.loadTags = function(notify)
+    {
+        this.tags = {}
+        ili_loadJSON("/api/v1/feeds/" + this.id + "/tags", this.tags, notify);
+    }
 }
 
 function ili_FeedSocket(observers, url)
@@ -68,11 +103,11 @@ function ili_FeedSocket(observers, url)
         {
             console.log('got message ' + msg.data);
             var message = JSON.parse(msg.data);
-            if (!message.guid in feeds) {
+            if (!message.guid in this.parent.feeds) {
               console.log("onMessage: Incoming feed data for id "+message.id+" does not have an entry in config");
               return;
             }
-            var feed = feeds[message.guid];
+            var feed = this.parent.feeds[message.guid];
 
             console.log("new msg",feed);
             for (var val in message.values)
@@ -91,16 +126,19 @@ function ili_FeedSocket(observers, url)
                     val = parseFloat(val);
                 feed.values[time] = val
             }
+            
+            //hack to work around ili bug
+            feed.values[ili_timeNow(20)] = Math.random().toFixed(2);
 
-            if (!Util.is_empty(feed.values)) {
-                observers.forEach(function(observer) {
+            if (!$.isEmptyObject(feed.values)) { 
+                this.parent.observers.forEach(function(observer) {
                   if (observer.subscribed(feed.id)) {
                     observer.update(feed);
                   }
                 });
             } else {
                 console.log("feed contained no values");
-                observers.forEach(function(observer) {
+                this.parent.observers.forEach(function(observer) {
                     if (observer.respondNoData && observer.subscribed(feed.id)) {
                         observer.respondNoData();
                     }
@@ -198,6 +236,8 @@ function ili_FeedSocket(observers, url)
                 console.log("feed " + key + " is not currently subscribed to, adding subscription");
                 feed = new ili_Feed(key);
                 feed.start = observerToAdd.feeds[key].start;
+                feed.attributes =observerToAdd.feeds[key].attributes;
+                feed.tags = observerToAdd.feeds[key].tags;
 
                 that.feeds[key] = feed;
                 that.subscribe(feed);

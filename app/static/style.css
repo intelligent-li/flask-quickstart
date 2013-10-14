@@ -11,6 +11,26 @@ header {
   padding: 6px 0;
 }
 
+#samplewrapper {
+    display: table;
+    overflow: hidden;
+    vertical-align: middle;
+}
+
+#samplelabel {
+    float: left;
+    margin-right: 10px;
+    vertical-align: middle;
+    display: table-cell;
+}
+
+#samplevalue {
+    font-size: 2.5em;
+    font-weight: 600;
+    vertical-align: middle;
+    display: table-cell;
+}
+
 input[type=submit] {
     font-size: 1.0em;
     background-color: #121313;

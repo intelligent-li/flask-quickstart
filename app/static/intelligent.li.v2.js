@@ -128,7 +128,7 @@ function ili_FeedSocket(observers, url)
             }
             
             //hack to work around ili bug
-            feed.values[ili_timeNow(20)] = Math.random().toFixed(2);
+            //feed.values[ili_timeNow(20)] = Math.random().toFixed(2);
 
             if (!$.isEmptyObject(feed.values)) { 
                 this.parent.observers.forEach(function(observer) {

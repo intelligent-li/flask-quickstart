@@ -58,5 +58,5 @@ Now commit and push
      $ git commit
      $ git push origin master
 
-
+If you go back to your browser and subscribe to a feed, you'll see the samples coming through and printed on the screen (using D3.js animation!)
     

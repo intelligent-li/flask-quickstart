@@ -6,34 +6,34 @@ var previousValue = 0.0;
 
 var update = function(feed) {
 
-    var numSamples = Object.keys(feed.values).length;
     //We've been notified about an updated value, let's 
     //update the value on the screen
+
+    //find the most recent sample in the map
     var time = ili_timeNow(feed.attributes['interval']);
-    var value = feed.values[time];
-    if (!value)
-    {
-        previousValue = 0;
-        document.getElementById('samplevalue').innerHTML = "--.--";
-    }
-    else
-    {
-        var svg = d3.select("#samplewrapper.samplev"); 
+    var value = 0.0; 
 
-        d3.select('.samplev')
-            .text(previousValue)
-            .transition()
-            .duration(1000)
-            .ease('linear')
-            .tween("text", function() {
-                var i = d3.interpolate(this.textContent, value);
-                return function(t) {
-                    this.textContent = i(t).toFixed(4);
-                };
-            });
-
-        previousValue = value;
+    while (time > feed.attributes['lastSample']) {
+        value = feed.values[time]; 
+        if (value) {
+            break; 
+        }    
+        time -= 5;
     }
+
+    d3.select('.samplev')
+        .text(previousValue)
+        .transition()
+        .duration(1000)
+        .ease('linear')
+        .tween("text", function() {
+            var i = d3.interpolate(this.textContent, value);
+            return function(t) {
+                this.textContent = Number(i(t)).toFixed(4);
+            };
+        });
+
+    previousValue = value;
 }
 
 var feedSocket = null
@@ -43,7 +43,6 @@ function subscribeToFeed() {
     var feed = new ili_Feed(guid, 0);
     feed.loadAttributes(function() {
         console.log("interval: " + feed.attributes['interval']);
-        feed.attributes['interval'] = 20; //temporary hack to get around comfortometer posting every 20 seconds but the feed wanting 5
         feed.start = ili_timeNow(feed.attributes['interval']);
 
         var observer = new ili_Observer();
